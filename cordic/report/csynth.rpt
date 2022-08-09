@@ -1,0 +1,188 @@
+
+
+================================================================
+== Synthesis Summary Report of 'cordiccart2pol'
+================================================================
++ General Information: 
+    * Date:           Tue Aug  9 02:04:33 2022
+    * Version:        2021.2 (Build 3367213 on Tue Oct 19 02:47:39 MDT 2021)
+    * Project:        cordic_hls_prj
+    * Solution:       solution1 (Vivado IP Flow Target)
+    * Product family: zynq
+    * Target device:  xc7z020-clg484-1
+    
+
++ Performance & Resource Estimates: 
+    
+    PS: '+' for module; 'o' for loop; '*' for dataflow
+    +--------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+------+----------+-----------+------------+-----+
+    |                   Modules                  | Issue|      | Latency |  Latency  | Iteration|         | Trip |          |      |          |           |            |     |
+    |                   & Loops                  | Type | Slack| (cycles)|    (ns)   |  Latency | Interval| Count| Pipelined| BRAM |    DSP   |     FF    |     LUT    | URAM|
+    +--------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+------+----------+-----------+------------+-----+
+    |+ cordiccart2pol                            |     -|  0.06|      171|  1.710e+03|         -|      172|     -|        no|     -|  43 (19%)|  5370 (5%)|  8969 (16%)|    -|
+    | + cordiccart2pol_Pipeline_VITIS_LOOP_37_1  |     -|  0.11|      146|  1.460e+03|         -|      146|     -|        no|     -|   21 (9%)|  2553 (2%)|   1802 (3%)|    -|
+    |  o VITIS_LOOP_37_1                         |    II|  7.30|      144|  1.440e+03|        10|        9|    16|       yes|     -|         -|          -|           -|    -|
+    +--------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+------+----------+-----------+------------+-----+
+
+
+================================================================
+== HW Interfaces
+================================================================
+* S_AXILITE Interfaces
++---------------+------------+---------------+--------+----------+
+| Interface     | Data Width | Address Width | Offset | Register |
++---------------+------------+---------------+--------+----------+
+| s_axi_CTRL    | 32         | 6             | 16     | 0        |
+| s_axi_control | 32         | 4             |        |          |
++---------------+------------+---------------+--------+----------+
+
+* S_AXILITE Registers
++---------------+------------+--------+-------+--------+----------------------------------+----------------------------------------------------------+
+| Interface     | Register   | Offset | Width | Access | Description                      | Bit Fields                                               |
++---------------+------------+--------+-------+--------+----------------------------------+----------------------------------------------------------+
+| s_axi_CTRL    | x          | 0x10   | 32    | W      | Data signal of x                 |                                                          |
+| s_axi_CTRL    | y          | 0x18   | 32    | W      | Data signal of y                 |                                                          |
+| s_axi_CTRL    | r          | 0x20   | 32    | R      | Data signal of r                 |                                                          |
+| s_axi_CTRL    | r_ctrl     | 0x24   | 32    | R      | Control signal of r              | 0=r_ap_vld                                               |
+| s_axi_CTRL    | theta      | 0x30   | 32    | R      | Data signal of theta             |                                                          |
+| s_axi_CTRL    | theta_ctrl | 0x34   | 32    | R      | Control signal of theta          | 0=theta_ap_vld                                           |
+| s_axi_control | CTRL       | 0x00   | 32    | RW     | Control signals                  | 0=AP_START 1=AP_DONE 2=AP_IDLE 3=AP_READY 7=AUTO_RESTART |
+| s_axi_control | GIER       | 0x04   | 32    | RW     | Global Interrupt Enable Register | 0=Enable                                                 |
+| s_axi_control | IP_IER     | 0x08   | 32    | RW     | IP Interrupt Enable Register     | 0=CHAN0_INT_EN 1=CHAN1_INT_EN 5=CHAN2_INT_EN             |
+| s_axi_control | IP_ISR     | 0x0c   | 32    | RW     | IP Interrupt Status Register     | 0=CHAN0_INT_ST 1=CHAN1_INT_ST 5=CHAN2_INT_ST             |
++---------------+------------+--------+-------+--------+----------------------------------+----------------------------------------------------------+
+
+* TOP LEVEL CONTROL
++-----------+------------+-----------+
+| Interface | Type       | Ports     |
++-----------+------------+-----------+
+| ap_clk    | clock      | ap_clk    |
+| ap_rst_n  | reset      | ap_rst_n  |
+| interrupt | interrupt  | interrupt |
+| ap_ctrl   | ap_ctrl_hs |           |
++-----------+------------+-----------+
+
+
+================================================================
+== SW I/O Information
+================================================================
+* Top Function Arguments
++----------+-----------+----------+
+| Argument | Direction | Datatype |
++----------+-----------+----------+
+| x        | in        | float    |
+| y        | in        | float    |
+| r        | out       | float*   |
+| theta    | out       | float*   |
++----------+-----------+----------+
+
+* SW-to-HW Mapping
++----------+--------------+----------+--------------------------------------+
+| Argument | HW Interface | HW Type  | HW Info                              |
++----------+--------------+----------+--------------------------------------+
+| x        | s_axi_CTRL   | register | name=x offset=0x10 range=32          |
+| y        | s_axi_CTRL   | register | name=y offset=0x18 range=32          |
+| r        | s_axi_CTRL   | register | name=r offset=0x20 range=32          |
+| r        | s_axi_CTRL   | register | name=r_ctrl offset=0x24 range=32     |
+| theta    | s_axi_CTRL   | register | name=theta offset=0x30 range=32      |
+| theta    | s_axi_CTRL   | register | name=theta_ctrl offset=0x34 range=32 |
++----------+--------------+----------+--------------------------------------+
+
+
+================================================================
+== Bind Op Report
+================================================================
++--------------------------------------------+-----+--------+--------------+------+--------+---------+
+| Name                                       | DSP | Pragma | Variable     | Op   | Impl   | Latency |
++--------------------------------------------+-----+--------+--------------+------+--------+---------+
+| + cordiccart2pol                           | 43  |        |              |      |        |         |
+|   exp_fu_410_p2                            | -   |        | exp          | add  | tadder | 0       |
+|   man_V_2_fu_277_p2                        | -   |        | man_V_2      | sub  | fabric | 0       |
+|   F2_fu_290_p2                             | -   |        | F2           | sub  | fabric | 0       |
+|   add_ln590_fu_302_p2                      | -   |        | add_ln590    | add  | fabric | 0       |
+|   sub_ln590_fu_308_p2                      | -   |        | sub_ln590    | sub  | fabric | 0       |
+|   add_ln600_fu_624_p2                      | -   |        | add_ln600    | add  | fabric | 0       |
+|   p_Val2_13_fu_650_p2                      | -   |        | p_Val2_13    | add  | fabric | 0       |
+|   add_ln621_fu_478_p2                      | -   |        | add_ln621    | add  | tadder | 0       |
+|   pos1_fu_348_p2                           | -   |        | pos1         | add  | fabric | 0       |
+|   pos2_fu_490_p2                           | -   |        | pos2         | add  | fabric | 0       |
+|   exp_1_fu_863_p2                          | -   |        | exp_1        | add  | tadder | 0       |
+|   man_V_6_fu_522_p2                        | -   |        | man_V_6      | sub  | fabric | 0       |
+|   F2_1_fu_535_p2                           | -   |        | F2_1         | sub  | fabric | 0       |
+|   add_ln590_1_fu_547_p2                    | -   |        | add_ln590_1  | add  | fabric | 0       |
+|   sub_ln590_1_fu_553_p2                    | -   |        | sub_ln590_1  | sub  | fabric | 0       |
+|   add_ln600_1_fu_1103_p2                   | -   |        | add_ln600_1  | add  | fabric | 0       |
+|   p_Val2_18_fu_1129_p2                     | -   |        | p_Val2_18    | add  | fabric | 0       |
+|   add_ln621_1_fu_931_p2                    | -   |        | add_ln621_1  | add  | tadder | 0       |
+|   pos1_1_fu_593_p2                         | -   |        | pos1_1       | add  | fabric | 0       |
+|   pos2_1_fu_943_p2                         | -   |        | pos2_1       | add  | fabric | 0       |
+|   p_Val2_20_fu_1561_p2                     | -   |        | p_Val2_20    | sub  | fabric | 0       |
+|   tmp_V_fu_2007_p2                         | -   |        | tmp_V        | sub  | fabric | 0       |
+|   sub_ln997_fu_2077_p2                     | -   |        | sub_ln997    | sub  | fabric | 0       |
+|   lsb_index_fu_2083_p2                     | -   |        | lsb_index    | add  | fabric | 0       |
+|   sub_ln1000_fu_2186_p2                    | -   |        | sub_ln1000   | sub  | fabric | 0       |
+|   sub_ln1012_fu_2344_p2                    | -   |        | sub_ln1012   | sub  | fabric | 0       |
+|   add_ln1011_fu_2359_p2                    | -   |        | add_ln1011   | add  | fabric | 0       |
+|   m_2_fu_2384_p2                           | -   |        | m_2          | add  | fabric | 0       |
+|   sub_ln1017_fu_2485_p2                    | -   |        | sub_ln1017   | add  | tadder | 0       |
+|   add_ln1017_fu_2490_p2                    | -   |        | add_ln1017   | add  | tadder | 0       |
+|   dmul_64ns_64ns_64_7_max_dsp_1_U18        | 11  |        | p_op         | dmul | maxdsp | 6       |
+|   ret_V_fu_1706_p2                         | -   |        | ret_V        | sub  | fabric | 0       |
+|   ret_V_3_fu_1770_p2                       | -   |        | ret_V_3      | sub  | fabric | 0       |
+|   tmp_V_2_fu_2043_p2                       | -   |        | tmp_V_2      | sub  | fabric | 0       |
+|   sub_ln997_1_fu_2143_p2                   | -   |        | sub_ln997_1  | sub  | fabric | 0       |
+|   lsb_index_1_fu_2149_p2                   | -   |        | lsb_index_1  | add  | fabric | 0       |
+|   sub_ln1000_1_fu_2266_p2                  | -   |        | sub_ln1000_1 | sub  | fabric | 0       |
+|   sub_ln1012_1_fu_2411_p2                  | -   |        | sub_ln1012_1 | sub  | fabric | 0       |
+|   add_ln1011_1_fu_2426_p2                  | -   |        | add_ln1011_1 | add  | fabric | 0       |
+|   m_7_fu_2451_p2                           | -   |        | m_7          | add  | fabric | 0       |
+|   sub_ln1017_1_fu_2529_p2                  | -   |        | sub_ln1017_1 | add  | tadder | 0       |
+|   add_ln1017_1_fu_2534_p2                  | -   |        | add_ln1017_1 | add  | tadder | 0       |
+|   dmul_64ns_64ns_64_7_max_dsp_1_U19        | 11  |        | p_op1        | dmul | maxdsp | 6       |
+|  + cordiccart2pol_Pipeline_VITIS_LOOP_37_1 | 21  |        |              |      |        |         |
+|    add_ln37_fu_227_p2                      | -   |        | add_ln37     | add  | fabric | 0       |
+|    mul_32s_32s_64_2_1_U1                   | 3   |        | r_V_3        | mul  | auto   | 4       |
+|    mul_64s_30s_92_5_1_U4                   | 6   |        | r_V_8        | mul  | auto   | 1       |
+|    ret_V_fu_684_p2                         | -   |        | ret_V        | sub  | fabric | 0       |
+|    p_Val2_2_fu_728_p2                      | -   |        | p_Val2_2     | add  | fabric | 0       |
+|    mul_32s_32s_64_2_1_U2                   | 3   |        | r_V          | mul  | auto   | 4       |
+|    mul_64s_30s_92_5_1_U5                   | 6   |        | r_V_9        | mul  | auto   | 1       |
+|    ret_V_1_fu_798_p2                       | -   |        | ret_V_1      | add  | fabric | 0       |
+|    add_ln1245_1_fu_804_p2                  | -   |        | add_ln1245_1 | add  | fabric | 0       |
+|    add_ln1245_2_fu_809_p2                  | -   |        | add_ln1245_2 | add  | fabric | 0       |
+|    p_Val2_5_fu_843_p2                      | -   |        | p_Val2_5     | add  | fabric | 0       |
+|    mul_29ns_32s_61_2_1_U3                  | 3   |        | r_V_10       | mul  | auto   | 4       |
+|    ret_V_2_fu_418_p2                       | -   |        | ret_V_2      | sub  | fabric | 0       |
+|    p_Val2_8_fu_461_p2                      | -   |        | p_Val2_8     | add  | fabric | 0       |
++--------------------------------------------+-----+--------+--------------+------+--------+---------+
+
+
+================================================================
+== Bind Storage Report
+================================================================
++--------------------------------------------+------+------+--------+----------------+---------+------+---------+
+| Name                                       | BRAM | URAM | Pragma | Variable       | Storage | Impl | Latency |
++--------------------------------------------+------+------+--------+----------------+---------+------+---------+
+| + cordiccart2pol                           | 0    | 0    |        |                |         |      |         |
+|  + cordiccart2pol_Pipeline_VITIS_LOOP_37_1 | 0    | 0    |        |                |         |      |         |
+|    cordic_phase_V_U                        | -    | -    |        | cordic_phase_V | rom_1p  | auto | 1       |
++--------------------------------------------+------+------+--------+----------------+---------+------+---------+
+
+
+================================================================
+== User Pragma Report
+================================================================
+* Valid Pragma Syntax
++----------------+----------------------------------+------------------------------------------------------------------------------------------------+
+| Type           | Options                          | Location                                                                                       |
++----------------+----------------------------------+------------------------------------------------------------------------------------------------+
+| interface      | s_axilite port=x bundle=CTRL     | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:11 in cordiccart2pol, x      |
+| interface      | s_axilite port=y bundle=CTRL     | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:12 in cordiccart2pol, y      |
+| interface      | s_axilite port=r bundle=CTRL     | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:13 in cordiccart2pol, r      |
+| interface      | s_axilite port=theta bundle=CTRL | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:14 in cordiccart2pol, theta  |
+| interface      | s_axilite port=return            | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:16 in cordiccart2pol, return |
+| loop_tripcount | min=1 max=16                     | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:39 in cordiccart2pol         |
+| pipeline       |                                  | ../AMD_AECG_Summer_School_Projects-main/cordic/cordiccart2pol.cpp:40 in cordiccart2pol         |
++----------------+----------------------------------+------------------------------------------------------------------------------------------------+
+
+
